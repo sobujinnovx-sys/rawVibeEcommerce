@@ -14,6 +14,7 @@ WORKDIR /app
 COPY composer.json composer.lock ./
 RUN composer install \
     --no-dev \
+    --no-scripts \
     --no-interaction \
     --no-progress \
     --prefer-dist \
@@ -34,7 +35,11 @@ RUN apt-get update \
 
 COPY . .
 COPY --from=vendor /app/vendor ./vendor
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 COPY --from=frontend /app/public/build ./public/build
+
+RUN composer dump-autoload --no-dev --optimize \
+    && php artisan package:discover --ansi
 
 RUN chown -R www-data:www-data storage bootstrap/cache
 
