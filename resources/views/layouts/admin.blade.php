@@ -13,18 +13,20 @@
     <div class="min-h-screen flex" x-data="{ sidebar: false }">
         <aside :class="sidebar ? 'translate-x-0' : '-translate-x-full'"
                class="fixed inset-y-0 left-0 w-64 bg-slate-900 text-slate-200 transform lg:translate-x-0 lg:static transition-transform z-30">
-            <div class="h-16 flex items-center px-6 border-b border-slate-800">
-                <span class="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-600 text-white font-bold text-sm mr-2">RV</span>
-                <span class="font-semibold text-white">RAW VIBE ツ Admin</span>
+            <div class="px-6 py-4 border-b border-slate-800">
+                <span class="flex h-16 w-44 items-center overflow-hidden rounded-xl bg-white p-2 shadow-sm">
+                    <img src="{{ asset('1772777966111~3.png') }}" alt="RAW VIBE ツ" class="h-full w-full scale-110 object-cover object-center">
+                </span>
+                <span class="mt-2 block text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">{{ __('Admin Panel') }}</span>
             </div>
             <nav class="p-4 space-y-1 text-sm">
                 @php
                     $links = [
-                        ['admin.dashboard', 'Dashboard'],
-                        ['admin.categories.index', 'Categories'],
-                        ['admin.products.index', 'Products'],
-                        ['admin.orders.index', 'Orders'],
-                        ['admin.users.index', 'Users'],
+                        ['admin.dashboard', __('Dashboard')],
+                        ['admin.categories.index', __('Categories')],
+                        ['admin.products.index', __('Products')],
+                        ['admin.orders.index', __('Orders')],
+                        ['admin.users.index', __('Users')],
                     ];
                 @endphp
                 @foreach ($links as [$route, $label])
@@ -36,7 +38,7 @@
                 @endforeach
             </nav>
             <div class="absolute bottom-0 inset-x-0 p-4 border-t border-slate-800">
-                <a href="{{ route('home') }}" class="block text-xs text-slate-400 hover:text-white">← Back to Storefront</a>
+                <a href="{{ route('home') }}" class="block text-xs text-slate-400 hover:text-white">&larr; {{ __('Back to Storefront') }}</a>
             </div>
         </aside>
 
@@ -45,12 +47,16 @@
                 <button class="lg:hidden text-slate-600" @click="sidebar = !sidebar">
                     <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
                 </button>
-                <h1 class="text-lg font-semibold text-slate-900">@yield('page_title', 'Dashboard')</h1>
+                <h1 class="text-lg font-semibold text-slate-900">@yield('page_title', __('Dashboard'))</h1>
                 <div class="flex items-center gap-3 text-sm">
+                    <div class="hidden sm:flex items-center gap-1 rounded-full border border-slate-200 p-1 text-xs font-semibold text-slate-600">
+                        <a href="{{ route('locale.switch', 'en') }}" class="rounded-full px-2 py-1 {{ app()->currentLocale() === 'en' ? 'bg-slate-900 text-white' : 'hover:bg-slate-100' }}">EN</a>
+                        <a href="{{ route('locale.switch', 'bn') }}" class="rounded-full px-2 py-1 {{ app()->currentLocale() === 'bn' ? 'bg-slate-900 text-white' : 'hover:bg-slate-100' }}">বাং</a>
+                    </div>
                     <span class="text-slate-600 hidden sm:inline">{{ auth()->user()->name }}</span>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
-                        <button class="text-rose-600 font-semibold hover:text-rose-500">Logout</button>
+                        <button class="text-rose-600 font-semibold hover:text-rose-500">{{ __('Log Out') }}</button>
                     </form>
                 </div>
             </header>
@@ -67,7 +73,7 @@
             </main>
 
             <footer class="px-6 py-4 text-xs text-slate-500 border-t border-slate-200 bg-white">
-                &copy; {{ date('Y') }} RAW VIBE ツ · Developed by <span class="font-medium text-slate-700">Amith Hassan Anik</span>
+                &copy; {{ date('Y') }} RAW VIBE ツ · {{ __('Developed by') }} <span class="font-medium text-slate-700">Amith Hassan Anik</span>
             </footer>
         </div>
     </div>

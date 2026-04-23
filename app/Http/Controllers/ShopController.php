@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -47,6 +48,12 @@ class ShopController extends Controller
     {
         abort_if(! $product->is_active, 404);
 
+        $product->load([
+            'reviews' => function ($query) {
+                $query->with('user')->latest();
+            },
+        ]);
+
         $relatedProducts = Product::query()
             ->where('is_active', true)
             ->where('id', '!=', $product->id)
@@ -55,6 +62,23 @@ class ShopController extends Controller
             ->take(4)
             ->get();
 
-        return view('shop.show', compact('product', 'relatedProducts'));
+        $canReview = false;
+
+        if (auth()->check()) {
+            /** @var User $user */
+            $user = auth()->user();
+
+            $canReview = $user->orders()
+                ->whereHas('items', function ($query) use ($product) {
+                    $query->where('product_id', $product->id);
+                })
+                ->exists();
+        }
+
+        return view('shop.show', [
+            'product' => $product,
+            'relatedProducts' => $relatedProducts,
+            'canReview' => $canReview,
+        ]);
     }
 }

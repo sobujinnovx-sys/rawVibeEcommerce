@@ -10,6 +10,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HealthCheckController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ProductReviewController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\WishlistController;
@@ -28,12 +29,22 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/healthz', HealthCheckController::class)->name('healthz');
 
+Route::get('/locale/{locale}', function (string $locale) {
+    abort_unless(in_array($locale, ['en', 'bn'], true), 404);
+
+    session(['locale' => $locale]);
+
+    return back();
+})->name('locale.switch');
+
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
 Route::get('/products/{product:slug}', [ShopController::class, 'show'])->name('shop.show');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::post('/products/{product}/reviews', [ProductReviewController::class, 'store'])->name('products.reviews.store');
 
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
     Route::post('/cart/{product}', [CartController::class, 'store'])->name('cart.store');

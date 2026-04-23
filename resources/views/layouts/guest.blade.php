@@ -16,10 +16,15 @@
     </head>
     <body class="font-sans text-gray-900 antialiased">
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gradient-to-br from-indigo-50 via-white to-slate-100">
+            <div class="absolute top-4 right-4 flex items-center gap-1 rounded-full border border-slate-200 bg-white/80 p-1 text-xs font-semibold text-slate-600 shadow-sm">
+                <a href="{{ route('locale.switch', 'en') }}" class="rounded-full px-2 py-1 {{ app()->currentLocale() === 'en' ? 'bg-slate-900 text-white' : 'hover:bg-slate-100' }}">EN</a>
+                <a href="{{ route('locale.switch', 'bn') }}" class="rounded-full px-2 py-1 {{ app()->currentLocale() === 'bn' ? 'bg-slate-900 text-white' : 'hover:bg-slate-100' }}">বাং</a>
+            </div>
             <div>
-                <a href="/" class="flex items-center gap-2">
-                    <span class="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-600 text-white font-bold">RV</span>
-                    <span class="text-2xl font-semibold text-slate-900">RAW VIBE ツ</span>
+                <a href="/" class="flex items-center justify-center">
+                    <span class="flex h-16 w-44 items-center justify-center overflow-hidden rounded-2xl bg-white/70 p-2 shadow-sm ring-1 ring-slate-200">
+                        <img src="{{ asset('1772777966111~3.png') }}" alt="RAW VIBE ツ" class="h-full w-full scale-105 object-cover object-center">
+                    </span>
                 </a>
             </div>
 

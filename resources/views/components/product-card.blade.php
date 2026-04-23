@@ -15,7 +15,7 @@
         @endif
     </a>
     <div class="p-4 flex flex-col gap-2 flex-1">
-        <span class="text-xs uppercase tracking-wide text-indigo-600">{{ $product->category?->name ?? 'Product' }}</span>
+        <span class="text-xs uppercase tracking-wide text-indigo-600">{{ $product->category?->name ?? __('Product') }}</span>
         <a href="{{ route('shop.show', $product) }}" class="font-semibold text-slate-900 line-clamp-1 hover:text-indigo-600">
             {{ $product->name }}
         </a>
@@ -26,11 +26,11 @@
                     @csrf
                     <button type="submit" class="inline-flex items-center gap-1 text-xs font-semibold bg-indigo-600 text-white rounded-full px-3 py-1.5 hover:bg-indigo-500 disabled:opacity-60"
                         @disabled($product->stock < 1)>
-                        {{ $product->stock > 0 ? 'Add to Cart' : 'Out of Stock' }}
+                        {{ $product->stock > 0 ? __('Add to Cart') : __('Out of Stock') }}
                     </button>
                 </form>
             @else
-                <a href="{{ route('login') }}" class="text-xs font-semibold bg-indigo-600 text-white rounded-full px-3 py-1.5 hover:bg-indigo-500">Buy</a>
+                <a href="{{ route('login') }}" class="text-xs font-semibold bg-indigo-600 text-white rounded-full px-3 py-1.5 hover:bg-indigo-500">{{ __('Buy') }}</a>
             @endauth
         </div>
     </div>
