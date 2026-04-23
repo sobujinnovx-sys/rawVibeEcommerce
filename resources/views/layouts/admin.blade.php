@@ -13,11 +13,13 @@
     <div class="min-h-screen flex" x-data="{ sidebar: false }">
         <aside :class="sidebar ? 'translate-x-0' : '-translate-x-full'"
                class="fixed inset-y-0 left-0 w-64 bg-slate-900 text-slate-200 transform lg:translate-x-0 lg:static transition-transform z-30">
-            <div class="px-6 py-4 border-b border-slate-800">
-                <span class="flex h-16 w-44 items-center overflow-hidden rounded-xl bg-white p-2 shadow-sm">
-                    <img src="{{ asset('1772777966111~3.png') }}" alt="RAW VIBE ツ" class="h-full w-full scale-110 object-cover object-center">
-                </span>
-                <span class="mt-2 block text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">{{ __('Admin Panel') }}</span>
+            <div class="h-16 flex items-center px-6 border-b border-slate-800">
+                <a href="{{ route('home') }}" class="flex items-center gap-3">
+                    <span class="flex h-12 w-12 items-center justify-center overflow-hidden rounded-xl bg-white ring-1 ring-slate-200">
+                        <img src="{{ asset('1772777966111~3.png') }}" alt="RAW VIBE ツ" class="h-full w-full object-cover object-center">
+                    </span>
+                    <span class="text-sm font-semibold text-white">{{ __('Admin Panel') }}</span>
+                </a>
             </div>
             <nav class="p-4 space-y-1 text-sm">
                 @php
