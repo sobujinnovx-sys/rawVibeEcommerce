@@ -1,0 +1,124 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreProductRequest;
+use App\Http\Requests\UpdateProductRequest;
+use App\Models\Category;
+use App\Models\Product;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Illuminate\View\View;
+
+class ProductController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index(): View
+    {
+        $products = Product::query()
+            ->with('category')
+            ->latest()
+            ->paginate(10);
+
+        return view('admin.products.index', compact('products'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create(): View
+    {
+        $categories = Category::query()->where('is_active', true)->orderBy('name')->get();
+
+        return view('admin.products.create', compact('categories'));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(StoreProductRequest $request): RedirectResponse
+    {
+        $validated = $request->validated();
+        $validated['slug'] = $this->uniqueSlug($validated['name']);
+        $validated['is_featured'] = $request->boolean('is_featured');
+        $validated['is_active'] = $request->boolean('is_active');
+
+        if ($request->hasFile('image')) {
+            $validated['image'] = $request->file('image')->store('products', 'public');
+        }
+
+        Product::query()->create($validated);
+
+        return redirect()->route('admin.products.index')->with('success', 'Product created successfully.');
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function edit(Product $product): View
+    {
+        $categories = Category::query()->orderBy('name')->get();
+
+        return view('admin.products.edit', compact('product', 'categories'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(UpdateProductRequest $request, Product $product): RedirectResponse
+    {
+        $validated = $request->validated();
+        if ($product->name !== $validated['name']) {
+            $validated['slug'] = $this->uniqueSlug($validated['name'], $product->id);
+        }
+
+        $validated['is_featured'] = $request->boolean('is_featured');
+        $validated['is_active'] = $request->boolean('is_active');
+
+        if ($request->hasFile('image')) {
+            if ($product->image) {
+                Storage::disk('public')->delete($product->image);
+            }
+            $validated['image'] = $request->file('image')->store('products', 'public');
+        }
+
+        $product->update($validated);
+
+        return redirect()->route('admin.products.index')->with('success', 'Product updated successfully.');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Product $product): RedirectResponse
+    {
+        if ($product->image) {
+            Storage::disk('public')->delete($product->image);
+        }
+
+        $product->delete();
+
+        return redirect()->route('admin.products.index')->with('success', 'Product deleted successfully.');
+    }
+
+    private function uniqueSlug(string $name, ?int $ignoreId = null): string
+    {
+        $base = Str::slug($name);
+        $slug = $base;
+        $counter = 1;
+
+        while (Product::query()
+            ->where('slug', $slug)
+            ->when($ignoreId, fn ($query) => $query->where('id', '!=', $ignoreId))
+            ->exists()) {
+            $slug = $base.'-'.$counter;
+            $counter++;
+        }
+
+        return $slug;
+    }
+}
