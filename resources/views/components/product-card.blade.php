@@ -20,7 +20,7 @@
             {{ $product->name }}
         </a>
         <div class="mt-auto flex items-center justify-between pt-3">
-            <span class="text-lg font-semibold text-slate-900">${{ number_format((float) $product->price, 2) }}</span>
+            <span class="text-base font-semibold text-slate-900"><span class="font-bold">৳</span>{{ number_format((float) $product->price, 2) }}</span>
             @auth
                 <form method="POST" action="{{ route('cart.store', $product) }}">
                     @csrf
