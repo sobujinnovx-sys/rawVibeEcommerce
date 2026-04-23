@@ -20,7 +20,7 @@ return [
         match (parse_url((string) env('DATABASE_URL', ''), PHP_URL_SCHEME)) {
             'pgsql', 'postgres', 'postgresql' => 'pgsql',
             'mysql' => 'mysql',
-            default => 'mysql',
+            default => 'sqlite',
         }
     ),
 

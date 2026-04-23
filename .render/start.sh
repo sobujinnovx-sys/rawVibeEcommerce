@@ -7,9 +7,11 @@ mkdir -p storage/framework/cache/data storage/framework/sessions storage/framewo
 chown -R www-data:www-data storage bootstrap/cache
 
 if [ -z "${DATABASE_URL:-}" ] && [ -z "${DB_HOST:-}" ]; then
-  echo "Render database configuration is missing."
-  echo "Use the Blueprint in render.yaml or set DATABASE_URL (preferred) or DB_HOST/DB_DATABASE/DB_USERNAME/DB_PASSWORD manually."
-  exit 1
+  echo "No external database configured. Falling back to SQLite for this deployment."
+  export DB_CONNECTION=sqlite
+  export DB_DATABASE=/var/www/html/database/database.sqlite
+  mkdir -p /var/www/html/database
+  touch /var/www/html/database/database.sqlite
 fi
 
 if [ ! -L public/storage ]; then
