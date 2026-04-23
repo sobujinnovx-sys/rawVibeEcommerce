@@ -1,0 +1,48 @@
+services:
+  - type: web
+    name: raw-vibe-ecommerce
+    runtime: docker
+    plan: free
+    region: oregon
+    dockerfilePath: ./Dockerfile
+    autoDeployTrigger: commit
+    healthCheckPath: /healthz
+    envVars:
+      - key: APP_NAME
+        value: RAW VIBE ツ
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_KEY
+        generateValue: true
+      - key: APP_URL
+        sync: false
+      - key: LOG_CHANNEL
+        value: stack
+      - key: LOG_LEVEL
+        value: error
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DATABASE_URL
+        fromDatabase:
+          name: raw-vibe-db
+          property: connectionString
+      - key: SESSION_DRIVER
+        value: cookie
+      - key: CACHE_DRIVER
+        value: file
+      - key: QUEUE_CONNECTION
+        value: sync
+      - key: FILESYSTEM_DISK
+        value: public
+      - key: APP_SEED_DEMO_DATA
+        value: "true"
+
+databases:
+  - name: raw-vibe-db
+    plan: free
+    region: oregon
+    databaseName: raw_vibe_ecommerce
+    user: raw_vibe_user
+    ipAllowList: []
