@@ -15,14 +15,7 @@ return [
     |
     */
 
-    'default' => env(
-        'DB_CONNECTION',
-        match (parse_url((string) env('DATABASE_URL', ''), PHP_URL_SCHEME)) {
-            'pgsql', 'postgres', 'postgresql' => 'pgsql',
-            'mysql' => 'mysql',
-            default => 'sqlite',
-        }
-    ),
+    'default' => env('DB_CONNECTION', 'mysql'),
 
     /*
     |--------------------------------------------------------------------------

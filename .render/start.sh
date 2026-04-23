@@ -7,11 +7,9 @@ mkdir -p storage/framework/cache/data storage/framework/sessions storage/framewo
 chown -R www-data:www-data storage bootstrap/cache
 
 if [ -z "${DATABASE_URL:-}" ] && [ -z "${DB_HOST:-}" ]; then
-  echo "No external database configured. Falling back to SQLite for this deployment."
-  export DB_CONNECTION=sqlite
-  export DB_DATABASE=/var/www/html/database/database.sqlite
-  mkdir -p /var/www/html/database
-  touch /var/www/html/database/database.sqlite
+  echo "Render database configuration is missing."
+  echo "Set MYSQL env vars (DB_CONNECTION=mysql, DB_HOST, DB_PORT, DB_DATABASE, DB_USERNAME, DB_PASSWORD) or provide DATABASE_URL."
+  exit 1
 fi
 
 if [ ! -L public/storage ]; then
