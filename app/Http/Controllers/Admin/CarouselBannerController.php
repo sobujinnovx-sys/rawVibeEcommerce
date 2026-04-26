@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCarouselBannerRequest;
 use App\Http\Requests\UpdateCarouselBannerRequest;
 use App\Models\CarouselBanner;
+use App\Services\ImageUploadService;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class CarouselBannerController extends Controller
@@ -37,7 +37,7 @@ class CarouselBannerController extends Controller
         $validated['is_active'] = $request->boolean('is_active');
 
         if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('banners', $this->imageDisk());
+            $validated['image'] = ImageUploadService::upload($request->file('image'), 'banners');
         }
 
         CarouselBanner::query()->create($validated);
@@ -60,10 +60,8 @@ class CarouselBannerController extends Controller
         $validated['is_active'] = $request->boolean('is_active');
 
         if ($request->hasFile('image')) {
-            if ($carouselBanner->image) {
-                Storage::disk($this->imageDisk())->delete($carouselBanner->image);
-            }
-            $validated['image'] = $request->file('image')->store('banners', $this->imageDisk());
+            ImageUploadService::delete($carouselBanner->image);
+            $validated['image'] = ImageUploadService::upload($request->file('image'), 'banners');
         }
 
         $carouselBanner->update($validated);
@@ -73,17 +71,9 @@ class CarouselBannerController extends Controller
 
     public function destroy(CarouselBanner $carouselBanner): RedirectResponse
     {
-        if ($carouselBanner->image) {
-            Storage::disk($this->imageDisk())->delete($carouselBanner->image);
-        }
-
+        ImageUploadService::delete($carouselBanner->image);
         $carouselBanner->delete();
 
         return redirect()->route('admin.carousel-banners.index')->with('success', 'Carousel banner deleted successfully.');
-    }
-
-    private function imageDisk(): string
-    {
-        return (string) config('filesystems.image_upload_disk', config('filesystems.product_upload_disk', 'public'));
     }
 }

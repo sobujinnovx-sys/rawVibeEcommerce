@@ -7,8 +7,8 @@ use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Models\Category;
 use App\Models\Product;
+use App\Services\ImageUploadService;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 
@@ -50,7 +50,7 @@ class ProductController extends Controller
         $validated['is_active'] = $request->boolean('is_active');
 
         if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('products', $this->imageDisk());
+            $validated['image'] = ImageUploadService::upload($request->file('image'), 'products');
         }
 
         Product::query()->create($validated);
@@ -84,10 +84,8 @@ class ProductController extends Controller
         $validated['is_active'] = $request->boolean('is_active');
 
         if ($request->hasFile('image')) {
-            if ($product->image) {
-                Storage::disk($this->imageDisk())->delete($product->image);
-            }
-            $validated['image'] = $request->file('image')->store('products', $this->imageDisk());
+            ImageUploadService::delete($product->image);
+            $validated['image'] = ImageUploadService::upload($request->file('image'), 'products');
         }
 
         $product->update($validated);
@@ -100,18 +98,10 @@ class ProductController extends Controller
      */
     public function destroy(Product $product): RedirectResponse
     {
-        if ($product->image) {
-            Storage::disk($this->imageDisk())->delete($product->image);
-        }
-
+        ImageUploadService::delete($product->image);
         $product->delete();
 
         return redirect()->route('admin.products.index')->with('success', 'Product deleted successfully.');
-    }
-
-    private function imageDisk(): string
-    {
-        return (string) config('filesystems.image_upload_disk', config('filesystems.product_upload_disk', 'public'));
     }
 
     private function uniqueSlug(string $name, ?int $ignoreId = null): string
