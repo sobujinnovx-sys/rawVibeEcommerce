@@ -20,7 +20,7 @@ RUN composer install \
     --prefer-dist \
     --optimize-autoloader
 
-FROM php:8.2-apache
+FROM php:8.4-apache
 WORKDIR /var/www/html
 
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
