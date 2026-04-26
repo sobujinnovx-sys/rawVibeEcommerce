@@ -23,7 +23,7 @@
                             </div>
                             <div class="flex-1 min-w-0">
                                 <a href="{{ route('shop.show', $item->product) }}" class="font-semibold text-slate-900 hover:text-indigo-600 line-clamp-1">{{ $item->product->name }}</a>
-                                <p class="text-sm text-slate-500">${{ number_format((float) $item->product->price, 2) }}</p>
+                                <p class="text-sm text-slate-500">৳{{ number_format((float) $item->product->price, 2) }}</p>
                             </div>
                             <form method="POST" action="{{ route('cart.update', $item) }}" class="flex items-center gap-2">
                                 @csrf
@@ -33,7 +33,7 @@
                                     <button class="text-xs font-semibold text-indigo-600 hover:text-indigo-500">{{ __('Update') }}</button>
                             </form>
                             <div class="w-24 text-right font-semibold text-slate-900">
-                                ${{ number_format($item->quantity * (float) $item->product->price, 2) }}
+                                ৳{{ number_format($item->quantity * (float) $item->product->price, 2) }}
                             </div>
                             <form method="POST" action="{{ route('cart.destroy', $item) }}">
                                 @csrf
@@ -49,12 +49,12 @@
                 <aside class="bg-white border border-slate-200 rounded-2xl p-6 h-max">
                     <h2 class="text-lg font-semibold text-slate-900 mb-4">{{ __('Order Summary') }}</h2>
                     <dl class="space-y-2 text-sm">
-                        <div class="flex justify-between"><dt>{{ __('Subtotal') }}</dt><dd class="font-semibold">${{ number_format($subtotal, 2) }}</dd></div>
+                        <div class="flex justify-between"><dt>{{ __('Subtotal') }}</dt><dd class="font-semibold">৳{{ number_format($subtotal, 2) }}</dd></div>
                         <div class="flex justify-between text-slate-500"><dt>{{ __('Shipping') }}</dt><dd>{{ __('Calculated at checkout') }}</dd></div>
                     </dl>
                     <div class="mt-4 pt-4 border-t flex justify-between text-base">
                         <span class="font-semibold">{{ __('Total') }}</span>
-                        <span class="font-bold text-slate-900">${{ number_format($subtotal, 2) }}</span>
+                        <span class="font-bold text-slate-900">৳{{ number_format($subtotal, 2) }}</span>
                     </div>
                     <a href="{{ route('checkout.index') }}"
                        class="mt-6 block text-center bg-indigo-600 text-white font-semibold rounded-full py-3 hover:bg-indigo-500">

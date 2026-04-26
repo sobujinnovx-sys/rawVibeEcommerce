@@ -22,7 +22,7 @@
                         </a>
                         <div class="p-4">
                             <a href="{{ route('shop.show', $wishlist->product) }}" class="font-semibold text-slate-900 line-clamp-1">{{ $wishlist->product->name }}</a>
-                            <p class="text-sm text-slate-500">${{ number_format((float) $wishlist->product->price, 2) }}</p>
+                            <p class="text-sm text-slate-500">৳{{ number_format((float) $wishlist->product->price, 2) }}</p>
                             <div class="mt-3 flex gap-2">
                                 <form method="POST" action="{{ route('cart.store', $wishlist->product) }}" class="flex-1">
                                     @csrf

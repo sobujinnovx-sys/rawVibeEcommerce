@@ -23,17 +23,17 @@
                         <tr>
                             <td class="py-2">{{ $item->product_name }}</td>
                             <td class="py-2 text-right">{{ $item->quantity }}</td>
-                            <td class="py-2 text-right">${{ number_format((float) $item->price, 2) }}</td>
-                            <td class="py-2 text-right">${{ number_format((float) $item->line_total, 2) }}</td>
+                            <td class="py-2 text-right">৳{{ number_format((float) $item->price, 2) }}</td>
+                            <td class="py-2 text-right">৳{{ number_format((float) $item->line_total, 2) }}</td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
 
             <dl class="mt-4 space-y-1 text-sm text-right">
-                <div class="flex justify-end gap-6"><dt>Subtotal</dt><dd>${{ number_format((float) $order->subtotal, 2) }}</dd></div>
-                <div class="flex justify-end gap-6"><dt>Shipping</dt><dd>${{ number_format((float) $order->shipping_cost, 2) }}</dd></div>
-                <div class="flex justify-end gap-6 text-base font-semibold text-slate-900"><dt>Total</dt><dd>${{ number_format((float) $order->total, 2) }}</dd></div>
+                <div class="flex justify-end gap-6"><dt>Subtotal</dt><dd>৳{{ number_format((float) $order->subtotal, 2) }}</dd></div>
+                <div class="flex justify-end gap-6"><dt>Shipping</dt><dd>৳{{ number_format((float) $order->shipping_cost, 2) }}</dd></div>
+                <div class="flex justify-end gap-6 text-base font-semibold text-slate-900"><dt>Total</dt><dd>৳{{ number_format((float) $order->total, 2) }}</dd></div>
             </dl>
         </div>
 

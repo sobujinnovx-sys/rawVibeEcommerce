@@ -35,7 +35,7 @@
                                 <td class="px-5 py-3 font-semibold text-slate-900">#{{ $order->order_number }}</td>
                                 <td class="px-5 py-3 text-slate-600">{{ $order->created_at->format('M d, Y') }}</td>
                                 <td class="px-5 py-3 text-slate-600">{{ $order->items->sum('quantity') }}</td>
-                                <td class="px-5 py-3 font-semibold">${{ number_format((float) $order->total, 2) }}</td>
+                                <td class="px-5 py-3 font-semibold">৳{{ number_format((float) $order->total, 2) }}</td>
                                 <td class="px-5 py-3">
                                     <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-semibold
                                         @switch($order->status)

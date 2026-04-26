@@ -75,17 +75,17 @@
                     @foreach ($cartItems as $item)
                         <li class="py-2 flex justify-between gap-3">
                             <span class="text-slate-700">{{ $item->product->name }} × {{ $item->quantity }}</span>
-                            <span class="font-medium">${{ number_format($item->quantity * (float) $item->product->price, 2) }}</span>
+                            <span class="font-medium">৳{{ number_format($item->quantity * (float) $item->product->price, 2) }}</span>
                         </li>
                     @endforeach
                 </ul>
                 <dl class="mt-4 space-y-2 text-sm">
-                    <div class="flex justify-between"><dt>{{ __('Subtotal') }}</dt><dd>${{ number_format($subtotal, 2) }}</dd></div>
-                    <div class="flex justify-between"><dt>{{ __('Shipping') }}</dt><dd>${{ number_format($shippingCost, 2) }}</dd></div>
+                    <div class="flex justify-between"><dt>{{ __('Subtotal') }}</dt><dd>৳{{ number_format($subtotal, 2) }}</dd></div>
+                    <div class="flex justify-between"><dt>{{ __('Shipping') }}</dt><dd>৳{{ number_format($shippingCost, 2) }}</dd></div>
                 </dl>
                 <div class="mt-3 pt-3 border-t flex justify-between text-base font-bold text-slate-900">
                     <span>{{ __('Total') }}</span>
-                    <span>${{ number_format($total, 2) }}</span>
+                    <span>৳{{ number_format($total, 2) }}</span>
                 </div>
                 <button type="submit" class="mt-6 w-full bg-indigo-600 text-white font-semibold rounded-full py-3 hover:bg-indigo-500">
                     {{ __('Place Order') }}

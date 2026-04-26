@@ -23,7 +23,7 @@
                             <a href="{{ route('admin.orders.show', $order) }}" class="text-indigo-600 hover:text-indigo-500">#{{ $order->order_number }}</a>
                         </td>
                         <td class="px-5 py-3">{{ $order->user->name ?? $order->shipping_name }}</td>
-                        <td class="px-5 py-3">${{ number_format((float) $order->total, 2) }}</td>
+                        <td class="px-5 py-3">৳{{ number_format((float) $order->total, 2) }}</td>
                         <td class="px-5 py-3">{{ strtoupper($order->payment_method) }}</td>
                         <td class="px-5 py-3">
                             <span class="px-2 py-1 rounded-full text-xs bg-slate-100 text-slate-700">{{ ucfirst($order->status) }}</span>
