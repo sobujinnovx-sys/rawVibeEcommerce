@@ -63,10 +63,21 @@ class Product extends Model
         }
 
         $disk = $this->imageDisk();
-        /** @var \Illuminate\Filesystem\FilesystemAdapter $filesystem */
-        $filesystem = Storage::disk($disk);
+        $driver = (string) config("filesystems.disks.{$disk}.driver");
 
+        // For Cloudinary, skip the existence check and return the URL directly
+        if ($driver === 'cloudinary') {
+            try {
+                $filesystem = Storage::disk($disk);
+                return $filesystem->url($this->image);
+            } catch (Throwable) {
+                return null;
+            }
+        }
+
+        // For local disks, check if file exists
         try {
+            $filesystem = Storage::disk($disk);
             if (!$filesystem->exists($this->image)) {
                 return null;
             }
@@ -74,13 +85,14 @@ class Product extends Model
             return null;
         }
 
-        if ((string) config("filesystems.disks.{$disk}.driver") === 'local') {
+        if ($driver === 'local') {
             return $disk === 'public'
                 ? asset('storage/'.$this->image)
                 : route('media.show', ['path' => $this->image]);
         }
 
-        return $filesystem->url($this->image);
+        // For S3 and other cloud storage
+        return Storage::disk($disk)->url($this->image);
     }
 
     public function imageDisk(): string
