@@ -29,6 +29,7 @@ class StoreCheckoutRequest extends FormRequest
             'shipping_city' => ['required', 'string', 'max:120'],
             'shipping_postal_code' => ['nullable', 'string', 'max:30'],
             'notes' => ['nullable', 'string', 'max:1200'],
+            'coupon_code' => ['nullable', 'string', 'max:50'],
             'payment_method' => ['required', 'in:cod'],
         ];
     }

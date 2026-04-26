@@ -6,6 +6,7 @@ use App\Models\Cart;
 use App\Models\Product;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\View\View;
 
 class CartController extends Controller
@@ -18,7 +19,7 @@ class CartController extends Controller
             ->latest()
             ->get();
 
-        $subtotal = $cartItems->sum(fn (Cart $item) => $item->quantity * (float) $item->product->price);
+        $subtotal = $this->subtotal($cartItems);
 
         return view('cart.index', compact('cartItems', 'subtotal'));
     }
@@ -68,5 +69,10 @@ class CartController extends Controller
         $cart->delete();
 
         return back()->with('success', 'Item removed from cart.');
+    }
+
+    private function subtotal(Collection $cartItems): float
+    {
+        return round((float) $cartItems->sum(fn (Cart $item) => $item->quantity * (float) $item->product->effective_price), 2);
     }
 }

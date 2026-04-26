@@ -31,12 +31,15 @@ class Order extends Model
         'shipping_postal_code',
         'notes',
         'subtotal',
+        'coupon_code',
+        'coupon_discount',
         'shipping_cost',
         'total',
     ];
 
     protected $casts = [
         'subtotal' => 'decimal:2',
+        'coupon_discount' => 'decimal:2',
         'shipping_cost' => 'decimal:2',
         'total' => 'decimal:2',
     ];

@@ -37,7 +37,7 @@ class CarouselBannerController extends Controller
         $validated['is_active'] = $request->boolean('is_active');
 
         if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('banners', 'public');
+            $validated['image'] = $request->file('image')->store('banners', $this->imageDisk());
         }
 
         CarouselBanner::query()->create($validated);
@@ -61,9 +61,9 @@ class CarouselBannerController extends Controller
 
         if ($request->hasFile('image')) {
             if ($carouselBanner->image) {
-                Storage::disk('public')->delete($carouselBanner->image);
+                Storage::disk($this->imageDisk())->delete($carouselBanner->image);
             }
-            $validated['image'] = $request->file('image')->store('banners', 'public');
+            $validated['image'] = $request->file('image')->store('banners', $this->imageDisk());
         }
 
         $carouselBanner->update($validated);
@@ -74,11 +74,16 @@ class CarouselBannerController extends Controller
     public function destroy(CarouselBanner $carouselBanner): RedirectResponse
     {
         if ($carouselBanner->image) {
-            Storage::disk('public')->delete($carouselBanner->image);
+            Storage::disk($this->imageDisk())->delete($carouselBanner->image);
         }
 
         $carouselBanner->delete();
 
         return redirect()->route('admin.carousel-banners.index')->with('success', 'Carousel banner deleted successfully.');
+    }
+
+    private function imageDisk(): string
+    {
+        return (string) config('filesystems.image_upload_disk', config('filesystems.product_upload_disk', 'public'));
     }
 }

@@ -4,7 +4,9 @@ set -eu
 cd /var/www/html
 
 mkdir -p storage/framework/cache/data storage/framework/sessions storage/framework/views storage/logs
+mkdir -p "${RENDER_DISK_PATH:-/var/data}/uploads"
 chown -R www-data:www-data storage bootstrap/cache
+chown -R www-data:www-data "${RENDER_DISK_PATH:-/var/data}"
 
 if [ -z "${DATABASE_URL:-}" ] && [ -z "${DB_HOST:-}" ]; then
   echo "Render database configuration is missing."

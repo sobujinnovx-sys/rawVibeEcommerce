@@ -2,7 +2,8 @@
 
 return [
 
-    'product_upload_disk' => env('PRODUCT_IMAGE_DISK', 'public'),
+    'image_upload_disk' => env('IMAGE_UPLOAD_DISK', env('PRODUCT_IMAGE_DISK', 'public')),
+    'product_upload_disk' => env('PRODUCT_IMAGE_DISK', env('IMAGE_UPLOAD_DISK', 'public')),
 
     /*
     |--------------------------------------------------------------------------
@@ -42,6 +43,13 @@ return [
             'driver' => 'local',
             'root' => storage_path('app/public'),
             'url' => env('APP_URL').'/storage',
+            'visibility' => 'public',
+            'throw' => false,
+        ],
+
+        'render_public' => [
+            'driver' => 'local',
+            'root' => rtrim(env('RENDER_DISK_PATH', '/var/data'), '/\\').DIRECTORY_SEPARATOR.'uploads',
             'visibility' => 'public',
             'throw' => false,
         ],

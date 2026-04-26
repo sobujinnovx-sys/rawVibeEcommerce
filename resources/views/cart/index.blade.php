@@ -23,7 +23,12 @@
                             </div>
                             <div class="flex-1 min-w-0">
                                 <a href="{{ route('shop.show', $item->product) }}" class="font-semibold text-slate-900 hover:text-indigo-600 line-clamp-1">{{ $item->product->name }}</a>
-                                <p class="text-sm text-slate-500">৳{{ number_format((float) $item->product->price, 2) }}</p>
+                                @if ($item->product->has_discount)
+                                    <p class="text-xs text-slate-400"><del>৳{{ number_format((float) $item->product->price, 2) }}</del></p>
+                                    <p class="text-sm font-semibold text-rose-600">৳{{ number_format((float) $item->product->effective_price, 2) }}</p>
+                                @else
+                                    <p class="text-sm text-slate-500">৳{{ number_format((float) $item->product->price, 2) }}</p>
+                                @endif
                             </div>
                             <form method="POST" action="{{ route('cart.update', $item) }}" class="flex items-center gap-2">
                                 @csrf
@@ -33,7 +38,7 @@
                                     <button class="text-xs font-semibold text-indigo-600 hover:text-indigo-500">{{ __('Update') }}</button>
                             </form>
                             <div class="w-24 text-right font-semibold text-slate-900">
-                                ৳{{ number_format($item->quantity * (float) $item->product->price, 2) }}
+                                ৳{{ number_format($item->quantity * (float) $item->product->effective_price, 2) }}
                             </div>
                             <form method="POST" action="{{ route('cart.destroy', $item) }}">
                                 @csrf

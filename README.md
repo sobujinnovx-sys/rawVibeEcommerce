@@ -40,6 +40,19 @@ We would like to extend our thanks to the following sponsors for funding Laravel
 - **[WebReinvent](https://webreinvent.com/)**
 
 # rawVibeEcommerce
+
+## Render image storage
+
+If you upload product or banner images to the default `public` disk on Render, the files are stored inside the web container. That filesystem is not persistent, so images can disappear after the service restarts, redeploys, or a new instance spins up.
+
+Use one of these setups in production:
+
+1. Attach a Render persistent disk and set `IMAGE_UPLOAD_DISK=render_public`.
+2. Set `RENDER_DISK_PATH` to the mounted disk path if it is different from `/var/data`.
+3. Keep `php artisan storage:link` only for local development or for the `public` disk.
+
+With `render_public`, uploaded files are written to `${RENDER_DISK_PATH}/uploads` and served through `/media/...`, so they survive container restarts as long as the persistent disk is mounted.
+
 - **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
 - **[64 Robots](https://64robots.com)**
 - **[Curotec](https://www.curotec.com/services/technologies/laravel/)**

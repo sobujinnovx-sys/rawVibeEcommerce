@@ -39,7 +39,7 @@
                 <div class="mt-4 flex items-baseline gap-3">
                     @if ($product->has_discount)
                         <span class="text-3xl font-semibold text-rose-600">৳{{ number_format((float) $product->effective_price, 2) }}</span>
-                        <span class="text-lg text-slate-400 line-through">৳{{ number_format((float) $product->price, 2) }}</span>
+                        <del class="text-lg text-slate-400">৳{{ number_format((float) $product->price, 2) }}</del>
                     @else
                         <span class="text-3xl font-semibold text-slate-900">৳{{ number_format((float) $product->price, 2) }}</span>
                     @endif

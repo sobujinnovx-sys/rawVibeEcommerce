@@ -27,6 +27,7 @@
                         ['admin.dashboard', __('Dashboard')],
                         ['admin.carousel-banners.index', __('Carousel Banners')],
                         ['admin.categories.index', __('Categories')],
+                        ['admin.coupons.index', __('Coupons')],
                         ['admin.products.index', __('Products')],
                         ['admin.orders.index', __('Orders')],
                         ['admin.users.index', __('Users')],

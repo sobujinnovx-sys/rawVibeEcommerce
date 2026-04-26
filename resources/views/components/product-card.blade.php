@@ -31,7 +31,7 @@
         <div class="mt-auto flex items-center justify-between gap-2 pt-3">
             <div class="shrink-0">
                 @if ($product->has_discount)
-                    <p class="text-[11px] text-slate-400 line-through"><span class="font-bold">৳</span>{{ number_format((float) $product->price, 2) }}</p>
+                    <p class="text-[11px] text-slate-400"><del><span class="font-bold">৳</span>{{ number_format((float) $product->price, 2) }}</del></p>
                     <p class="text-base font-semibold text-rose-600"><span class="font-bold">৳</span>{{ number_format((float) $product->effective_price, 2) }}</p>
                 @else
                     <p class="text-base font-semibold text-slate-900"><span class="font-bold">৳</span>{{ number_format((float) $product->price, 2) }}</p>

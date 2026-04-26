@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
 
 class Product extends Model
 {
@@ -62,20 +63,21 @@ class Product extends Model
 
         $disk = $this->imageDisk();
 
-        if ($disk === 'public') {
-            return asset('storage/'.$this->image);
+        if ((string) config("filesystems.disks.{$disk}.driver") === 'local') {
+            return $disk === 'public'
+                ? asset('storage/'.$this->image)
+                : route('media.show', ['path' => $this->image]);
         }
 
-        $baseUrl = (string) config("filesystems.disks.{$disk}.url", '');
+        /** @var \Illuminate\Filesystem\FilesystemAdapter $filesystem */
+        $filesystem = Storage::disk($disk);
 
-        return $baseUrl !== ''
-            ? rtrim($baseUrl, '/').'/'.ltrim($this->image, '/')
-            : asset('storage/'.$this->image);
+        return $filesystem->url($this->image);
     }
 
     public function imageDisk(): string
     {
-        return (string) config('filesystems.product_upload_disk', 'public');
+        return (string) config('filesystems.image_upload_disk', config('filesystems.product_upload_disk', 'public'));
     }
 
     public function getHasDiscountAttribute(): bool

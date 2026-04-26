@@ -25,13 +25,26 @@
                 </thead>
                 <tbody class="divide-y">
                     @foreach ($order->items as $item)
-                        <tr><td class="py-2">{{ $item->product_name }}</td><td class="py-2 text-right">{{ $item->quantity }}</td><td class="py-2 text-right">৳{{ number_format((float) $item->price, 2) }}</td><td class="py-2 text-right">৳{{ number_format((float) $item->line_total, 2) }}</td></tr>
+                        <tr>
+                            <td class="py-2">{{ $item->product_name }}</td>
+                            <td class="py-2 text-right">{{ $item->quantity }}</td>
+                            <td class="py-2 text-right">
+                                @if ($item->original_price && (float) $item->original_price > (float) $item->price)
+                                    <span class="mr-2 text-xs text-slate-400 line-through">৳{{ number_format((float) $item->original_price, 2) }}</span>
+                                @endif
+                                ৳{{ number_format((float) $item->price, 2) }}
+                            </td>
+                            <td class="py-2 text-right">৳{{ number_format((float) $item->line_total, 2) }}</td>
+                        </tr>
                     @endforeach
                 </tbody>
             </table>
 
             <dl class="mt-4 space-y-1 text-sm text-right">
                 <div class="flex justify-between md:justify-end md:gap-6"><dt>{{ __('Subtotal') }}</dt><dd>৳{{ number_format((float) $order->subtotal, 2) }}</dd></div>
+                @if ((float) $order->coupon_discount > 0)
+                    <div class="flex justify-between md:justify-end md:gap-6 text-emerald-600"><dt>{{ __('Coupon Discount') }}</dt><dd>-৳{{ number_format((float) $order->coupon_discount, 2) }} @if($order->coupon_code)({{ $order->coupon_code }})@endif</dd></div>
+                @endif
                 <div class="flex justify-between md:justify-end md:gap-6"><dt>{{ __('Shipping') }}</dt><dd>৳{{ number_format((float) $order->shipping_cost, 2) }}</dd></div>
                 <div class="flex justify-between md:justify-end md:gap-6 text-base font-semibold text-slate-900"><dt>{{ __('Total') }}</dt><dd>৳{{ number_format((float) $order->total, 2) }}</dd></div>
             </dl>

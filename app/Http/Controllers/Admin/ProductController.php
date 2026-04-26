@@ -111,7 +111,7 @@ class ProductController extends Controller
 
     private function imageDisk(): string
     {
-        return (string) config('filesystems.product_upload_disk', 'public');
+        return (string) config('filesystems.image_upload_disk', config('filesystems.product_upload_disk', 'public'));
     }
 
     private function uniqueSlug(string $name, ?int $ignoreId = null): string

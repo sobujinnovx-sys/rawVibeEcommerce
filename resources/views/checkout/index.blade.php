@@ -74,13 +74,48 @@
                 <ul class="divide-y text-sm">
                     @foreach ($cartItems as $item)
                         <li class="py-2 flex justify-between gap-3">
-                            <span class="text-slate-700">{{ $item->product->name }} × {{ $item->quantity }}</span>
-                            <span class="font-medium">৳{{ number_format($item->quantity * (float) $item->product->price, 2) }}</span>
+                            <div>
+                                <span class="text-slate-700">{{ $item->product->name }} × {{ $item->quantity }}</span>
+                                @if ($item->product->has_discount)
+                                    <p class="text-xs text-slate-400"><del>৳{{ number_format((float) $item->product->price, 2) }}</del></p>
+                                @endif
+                            </div>
+                            <div class="text-right">
+                                @if ($item->product->has_discount)
+                                    <div class="font-medium text-rose-600">৳{{ number_format($item->quantity * (float) $item->product->effective_price, 2) }}</div>
+                                @else
+                                    <div class="font-medium">৳{{ number_format($item->quantity * (float) $item->product->effective_price, 2) }}</div>
+                                @endif
+                            </div>
                         </li>
                     @endforeach
                 </ul>
+                <div class="mt-4 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                    <label class="block text-sm font-medium text-slate-700 mb-2">{{ __('Coupon Code') }}</label>
+                    <div class="flex gap-2">
+                        <input name="coupon_code" value="{{ old('coupon_code', $coupon?->code) }}" placeholder="SAVE10"
+                               class="w-full rounded-lg border-slate-200 focus:border-indigo-500 focus:ring-indigo-500 text-sm uppercase">
+                        <button type="submit" formaction="{{ route('checkout.coupon.apply') }}" formnovalidate
+                                class="shrink-0 rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 hover:border-indigo-300 hover:text-indigo-600">
+                            {{ __('Apply') }}
+                        </button>
+                    </div>
+                    @error('coupon_code') <p class="text-xs text-rose-500 mt-2">{{ $message }}</p> @enderror
+                    @if ($coupon)
+                        <div class="mt-3 flex items-center justify-between gap-3 rounded-xl bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+                            <span>{{ __('Applied coupon') }}: <strong>{{ $coupon->code }}</strong></span>
+                            <button type="submit" formaction="{{ route('checkout.coupon.remove') }}" formnovalidate
+                                    class="font-semibold text-emerald-700 hover:text-emerald-600">
+                                {{ __('Remove') }}
+                            </button>
+                        </div>
+                    @endif
+                </div>
                 <dl class="mt-4 space-y-2 text-sm">
                     <div class="flex justify-between"><dt>{{ __('Subtotal') }}</dt><dd>৳{{ number_format($subtotal, 2) }}</dd></div>
+                    @if ($couponDiscount > 0)
+                        <div class="flex justify-between text-emerald-600"><dt>{{ __('Coupon Discount') }}</dt><dd>-৳{{ number_format($couponDiscount, 2) }}</dd></div>
+                    @endif
                     <div class="flex justify-between"><dt>{{ __('Shipping') }}</dt><dd>৳{{ number_format($shippingCost, 2) }}</dd></div>
                 </dl>
                 <div class="mt-3 pt-3 border-t flex justify-between text-base font-bold text-slate-900">

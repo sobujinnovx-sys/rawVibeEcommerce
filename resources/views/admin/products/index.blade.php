@@ -38,7 +38,7 @@
                         <td class="px-5 py-3 text-slate-600">{{ $product->category->name ?? '—' }}</td>
                         <td class="px-5 py-3">
                             @if ($product->has_discount)
-                                <p class="text-xs text-slate-400 line-through">৳{{ number_format((float) $product->price, 2) }}</p>
+                                <p class="text-xs text-slate-400"><del>৳{{ number_format((float) $product->price, 2) }}</del></p>
                                 <p class="font-semibold text-rose-600">৳{{ number_format((float) $product->effective_price, 2) }}</p>
                             @else
                                 <p class="font-semibold">৳{{ number_format((float) $product->price, 2) }}</p>

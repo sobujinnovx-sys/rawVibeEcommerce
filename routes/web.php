@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\CarouselBannerController as AdminCarouselBannerController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
+use App\Http\Controllers\Admin\CouponController as AdminCouponController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HealthCheckController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\MediaController;
 use App\Http\Controllers\ProductReviewController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ShopController;
@@ -29,6 +31,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/healthz', HealthCheckController::class)->name('healthz');
+Route::get('/media/{path}', MediaController::class)->where('path', '.*')->name('media.show');
 
 Route::get('/locale/{locale}', function (string $locale) {
     abort_unless(in_array($locale, ['en', 'bn'], true), 404);
@@ -53,6 +56,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/cart/{cart}', [CartController::class, 'destroy'])->name('cart.destroy');
 
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+    Route::post('/checkout/coupon', [CheckoutController::class, 'applyCoupon'])->name('checkout.coupon.apply');
+    Route::post('/checkout/coupon/remove', [CheckoutController::class, 'removeCoupon'])->name('checkout.coupon.remove');
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
     Route::get('/checkout/success/{order:order_number}', [CheckoutController::class, 'success'])->name('checkout.success');
 
@@ -64,6 +69,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::resource('categories', AdminCategoryController::class)->except(['show']);
+    Route::resource('coupons', AdminCouponController::class)->except(['show']);
     Route::resource('products', AdminProductController::class)->except(['show']);
     Route::resource('carousel-banners', AdminCarouselBannerController::class)->except(['show']);
     Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders.index');

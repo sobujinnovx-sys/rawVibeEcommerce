@@ -17,16 +17,18 @@
         @error('category_id') <p class="text-xs text-rose-500 mt-1">{{ $message }}</p> @enderror
     </div>
     <div>
-        <label class="block text-sm font-medium text-slate-700 mb-1">Price</label>
+         <label class="block text-sm font-medium text-slate-700 mb-1">Old Price</label>
         <input name="price" type="number" step="0.01" min="0" value="{{ old('price', $product->price ?? '') }}" required
                class="w-full rounded-lg border-slate-200 focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+         <p class="mt-1 text-xs text-slate-500">This will be shown as the crossed-out old price when a current price is set.</p>
         @error('price') <p class="text-xs text-rose-500 mt-1">{{ $message }}</p> @enderror
     </div>
     <div>
-        <label class="block text-sm font-medium text-slate-700 mb-1">Discounted Price</label>
+         <label class="block text-sm font-medium text-slate-700 mb-1">Current Price</label>
         <input name="discount_price" type="number" step="0.01" min="0" value="{{ old('discount_price', $product->discount_price ?? '') }}"
-               placeholder="Leave empty for no discount"
+             placeholder="Leave empty to use the old price as current price"
                class="w-full rounded-lg border-slate-200 focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+         <p class="mt-1 text-xs text-slate-500">If you enter a lower current price, the old price will appear inside a del tag on the storefront.</p>
         @error('discount_price') <p class="text-xs text-rose-500 mt-1">{{ $message }}</p> @enderror
     </div>
     <div>
