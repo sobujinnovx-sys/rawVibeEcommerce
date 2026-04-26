@@ -44,11 +44,13 @@ class ProductController extends Controller
     {
         $validated = $request->validated();
         $validated['slug'] = $this->uniqueSlug($validated['name']);
+        $validated['discount_price'] = $validated['discount_price'] ?? null;
+        $validated['promo_label'] = filled($validated['promo_label'] ?? null) ? trim((string) $validated['promo_label']) : null;
         $validated['is_featured'] = $request->boolean('is_featured');
         $validated['is_active'] = $request->boolean('is_active');
 
         if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('products', 'public');
+            $validated['image'] = $request->file('image')->store('products', $this->imageDisk());
         }
 
         Product::query()->create($validated);
@@ -72,6 +74,8 @@ class ProductController extends Controller
     public function update(UpdateProductRequest $request, Product $product): RedirectResponse
     {
         $validated = $request->validated();
+        $validated['discount_price'] = $validated['discount_price'] ?? null;
+        $validated['promo_label'] = filled($validated['promo_label'] ?? null) ? trim((string) $validated['promo_label']) : null;
         if ($product->name !== $validated['name']) {
             $validated['slug'] = $this->uniqueSlug($validated['name'], $product->id);
         }
@@ -81,9 +85,9 @@ class ProductController extends Controller
 
         if ($request->hasFile('image')) {
             if ($product->image) {
-                Storage::disk('public')->delete($product->image);
+                Storage::disk($this->imageDisk())->delete($product->image);
             }
-            $validated['image'] = $request->file('image')->store('products', 'public');
+            $validated['image'] = $request->file('image')->store('products', $this->imageDisk());
         }
 
         $product->update($validated);
@@ -97,12 +101,17 @@ class ProductController extends Controller
     public function destroy(Product $product): RedirectResponse
     {
         if ($product->image) {
-            Storage::disk('public')->delete($product->image);
+            Storage::disk($this->imageDisk())->delete($product->image);
         }
 
         $product->delete();
 
         return redirect()->route('admin.products.index')->with('success', 'Product deleted successfully.');
+    }
+
+    private function imageDisk(): string
+    {
+        return (string) config('filesystems.product_upload_disk', 'public');
     }
 
     private function uniqueSlug(string $name, ?int $ignoreId = null): string

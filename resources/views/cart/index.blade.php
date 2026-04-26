@@ -17,8 +17,8 @@
                     @foreach ($cartItems as $item)
                         <div class="p-5 flex gap-4 items-center">
                             <div class="h-20 w-20 rounded-lg overflow-hidden bg-slate-100 flex-shrink-0">
-                                @if ($item->product->image)
-                                    <img src="{{ asset('storage/'.$item->product->image) }}" alt="{{ $item->product->name }}" class="h-full w-full object-cover">
+                                    @if ($item->product->image_url)
+                                        <img src="{{ $item->product->image_url }}" alt="{{ $item->product->name }}" class="h-full w-full object-cover">
                                 @endif
                             </div>
                             <div class="flex-1 min-w-0">

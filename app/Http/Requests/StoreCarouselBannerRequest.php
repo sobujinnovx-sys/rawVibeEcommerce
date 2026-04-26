@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreProductRequest extends FormRequest
+class StoreCarouselBannerRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,15 +22,12 @@ class StoreProductRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'category_id' => ['required', 'exists:categories,id'],
-            'name' => ['required', 'string', 'max:255'],
-            'price' => ['required', 'numeric', 'min:0.01'],
-            'discount_price' => ['nullable', 'numeric', 'gt:0', 'lt:price'],
-            'promo_label' => ['nullable', 'string', 'max:50'],
-            'stock' => ['required', 'integer', 'min:0'],
-            'description' => ['nullable', 'string'],
+            'title' => ['required', 'string', 'max:255'],
+            'subtitle' => ['nullable', 'string', 'max:255'],
+            'button_text' => ['nullable', 'string', 'max:50'],
+            'button_link' => ['nullable', 'string', 'max:255'],
             'image' => ['nullable', 'file', 'max:15360'],
-            'is_featured' => ['nullable', 'boolean'],
+            'sort_order' => ['nullable', 'integer', 'min:0'],
             'is_active' => ['nullable', 'boolean'],
         ];
     }

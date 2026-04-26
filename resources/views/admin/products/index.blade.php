@@ -26,8 +26,8 @@
                     <tr>
                         <td class="px-5 py-3 flex items-center gap-3">
                             <div class="h-10 w-10 bg-slate-100 rounded-lg overflow-hidden">
-                                @if ($product->image)
-                                    <img src="{{ asset('storage/'.$product->image) }}" class="h-full w-full object-cover">
+                                @if ($product->image_url)
+                                    <img src="{{ $product->image_url }}" class="h-full w-full object-cover">
                                 @endif
                             </div>
                             <div>
@@ -36,7 +36,14 @@
                             </div>
                         </td>
                         <td class="px-5 py-3 text-slate-600">{{ $product->category->name ?? '—' }}</td>
-                        <td class="px-5 py-3 font-semibold">${{ number_format((float) $product->price, 2) }}</td>
+                        <td class="px-5 py-3">
+                            @if ($product->has_discount)
+                                <p class="text-xs text-slate-400 line-through">৳{{ number_format((float) $product->price, 2) }}</p>
+                                <p class="font-semibold text-rose-600">৳{{ number_format((float) $product->effective_price, 2) }}</p>
+                            @else
+                                <p class="font-semibold">৳{{ number_format((float) $product->price, 2) }}</p>
+                            @endif
+                        </td>
                         <td class="px-5 py-3 {{ $product->stock < 5 ? 'text-rose-600 font-semibold' : 'text-slate-600' }}">{{ $product->stock }}</td>
                         <td class="px-5 py-3">
                             <span class="px-2 py-1 rounded-full text-xs {{ $product->is_active ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-600' }}">
@@ -44,6 +51,9 @@
                             </span>
                             @if ($product->is_featured)
                                 <span class="ml-1 px-2 py-1 rounded-full text-xs bg-amber-100 text-amber-700">Featured</span>
+                            @endif
+                            @if (!empty($product->promo_label))
+                                <span class="ml-1 px-2 py-1 rounded-full text-xs bg-indigo-100 text-indigo-700">{{ $product->promo_label }}</span>
                             @endif
                         </td>
                         <td class="px-5 py-3 text-right">

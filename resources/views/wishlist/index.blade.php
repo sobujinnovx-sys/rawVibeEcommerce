@@ -16,8 +16,8 @@
                 @foreach ($wishlistItems as $wishlist)
                     <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden">
                         <a href="{{ route('shop.show', $wishlist->product) }}" class="block aspect-square bg-slate-100">
-                            @if ($wishlist->product->image)
-                                <img src="{{ asset('storage/'.$wishlist->product->image) }}" alt="{{ $wishlist->product->name }}" class="w-full h-full object-cover">
+                            @if ($wishlist->product->image_url)
+                                <img src="{{ $wishlist->product->image_url }}" alt="{{ $wishlist->product->name }}" class="w-full h-full object-cover">
                             @endif
                         </a>
                         <div class="p-4">

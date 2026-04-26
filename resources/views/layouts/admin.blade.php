@@ -16,7 +16,7 @@
             <div class="h-16 flex items-center px-6 border-b border-slate-800">
                 <a href="{{ route('home') }}" class="flex items-center gap-3">
                     <span class="flex h-12 w-12 items-center justify-center overflow-hidden rounded-xl bg-white ring-1 ring-slate-200">
-                        <img src="{{ asset('1772777966111~3.png') }}" alt="RAW VIBE ツ" class="h-full w-full object-cover object-center">
+                        <img src="{{ asset('1772777966111~3.png') }}" alt="RAW VIBE ツ" width="48" height="48" style="max-width:48px;max-height:48px" class="h-12 w-12 object-cover object-center">
                     </span>
                     <span class="text-sm font-semibold text-white">{{ __('Admin Panel') }}</span>
                 </a>
@@ -25,6 +25,7 @@
                 @php
                     $links = [
                         ['admin.dashboard', __('Dashboard')],
+                        ['admin.carousel-banners.index', __('Carousel Banners')],
                         ['admin.categories.index', __('Categories')],
                         ['admin.products.index', __('Products')],
                         ['admin.orders.index', __('Orders')],

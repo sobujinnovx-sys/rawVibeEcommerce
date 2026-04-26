@@ -12,8 +12,8 @@
 
         <div class="grid md:grid-cols-2 gap-10 bg-white border border-slate-200 rounded-3xl p-6 md:p-10">
             <div class="aspect-square bg-slate-100 rounded-2xl overflow-hidden">
-                @if ($product->image)
-                    <img src="{{ asset('storage/'.$product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
+                @if ($product->image_url)
+                    <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
                 @else
                     <div class="w-full h-full flex items-center justify-center text-slate-300">
                         <svg class="h-24 w-24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V6z"/></svg>
@@ -24,8 +24,25 @@
             <div class="flex flex-col">
                 <span class="text-xs uppercase tracking-widest text-indigo-600">{{ $product->category?->name }}</span>
                 <h1 class="text-3xl font-bold text-slate-900 mt-2">{{ $product->name }}</h1>
+                @if ($product->has_discount)
+                    <div class="mt-2 inline-flex w-fit items-center gap-2 rounded-full bg-rose-50 px-3 py-1 text-xs font-semibold text-rose-600">
+                        <span>-{{ $product->discount_percentage }}%</span>
+                        @if (!empty($product->promo_label))
+                            <span>• {{ $product->promo_label }}</span>
+                        @endif
+                    </div>
+                @elseif (!empty($product->promo_label))
+                    <div class="mt-2 inline-flex w-fit items-center rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700">
+                        {{ $product->promo_label }}
+                    </div>
+                @endif
                 <div class="mt-4 flex items-baseline gap-3">
-                    <span class="text-3xl font-semibold text-slate-900">${{ number_format((float) $product->price, 2) }}</span>
+                    @if ($product->has_discount)
+                        <span class="text-3xl font-semibold text-rose-600">৳{{ number_format((float) $product->effective_price, 2) }}</span>
+                        <span class="text-lg text-slate-400 line-through">৳{{ number_format((float) $product->price, 2) }}</span>
+                    @else
+                        <span class="text-3xl font-semibold text-slate-900">৳{{ number_format((float) $product->price, 2) }}</span>
+                    @endif
                     @if ($product->stock > 0)
                         <span class="text-sm text-emerald-600 font-medium">{{ __('In Stock') }} ({{ $product->stock }})</span>
                     @else
@@ -36,19 +53,25 @@
 
                 <div class="mt-8 flex flex-wrap gap-3">
                     @auth
-                        <form method="POST" action="{{ route('cart.store', $product) }}">
-                            @csrf
-                            <button type="submit" class="bg-indigo-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-indigo-500 disabled:opacity-60"
-                                @disabled($product->stock < 1)>
-                                {{ $product->stock > 0 ? __('Add to Cart') : __('Out of Stock') }}
-                            </button>
-                        </form>
-                        <form method="POST" action="{{ route('wishlist.store', $product) }}">
-                            @csrf
-                            <button type="submit" class="border border-slate-200 text-slate-700 px-6 py-3 rounded-full font-semibold hover:bg-slate-50">
-                                ♡ {{ __('Add to Wishlist') }}
-                            </button>
-                        </form>
+                        @if (!auth()->user()->isAdmin())
+                            <form method="POST" action="{{ route('cart.store', $product) }}">
+                                @csrf
+                                <button type="submit" class="bg-indigo-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-indigo-500 disabled:opacity-60"
+                                    @disabled($product->stock < 1)>
+                                    {{ $product->stock > 0 ? __('Add to Cart') : __('Out of Stock') }}
+                                </button>
+                            </form>
+                            <form method="POST" action="{{ route('wishlist.store', $product) }}">
+                                @csrf
+                                <button type="submit" class="border border-slate-200 text-slate-700 px-6 py-3 rounded-full font-semibold hover:bg-slate-50">
+                                    ♡ {{ __('Add to Wishlist') }}
+                                </button>
+                            </form>
+                        @else
+                            <a href="{{ route('admin.dashboard') }}" class="border border-slate-200 text-slate-700 px-6 py-3 rounded-full font-semibold hover:bg-slate-50">
+                                {{ __('Open Admin Panel') }}
+                            </a>
+                        @endif
                     @else
                         <a href="{{ route('login') }}" class="bg-indigo-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-indigo-500">{{ __('Login to Buy') }}</a>
                     @endauth

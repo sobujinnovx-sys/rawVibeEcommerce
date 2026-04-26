@@ -23,6 +23,20 @@
         @error('price') <p class="text-xs text-rose-500 mt-1">{{ $message }}</p> @enderror
     </div>
     <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">Discounted Price</label>
+        <input name="discount_price" type="number" step="0.01" min="0" value="{{ old('discount_price', $product->discount_price ?? '') }}"
+               placeholder="Leave empty for no discount"
+               class="w-full rounded-lg border-slate-200 focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+        @error('discount_price') <p class="text-xs text-rose-500 mt-1">{{ $message }}</p> @enderror
+    </div>
+    <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">Promo Label</label>
+        <input name="promo_label" value="{{ old('promo_label', $product->promo_label ?? '') }}"
+               placeholder="Example: EID DEAL, FLASH SALE"
+               class="w-full rounded-lg border-slate-200 focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+        @error('promo_label') <p class="text-xs text-rose-500 mt-1">{{ $message }}</p> @enderror
+    </div>
+    <div>
         <label class="block text-sm font-medium text-slate-700 mb-1">Stock</label>
         <input name="stock" type="number" min="0" value="{{ old('stock', $product->stock ?? 0) }}" required
                class="w-full rounded-lg border-slate-200 focus:border-indigo-500 focus:ring-indigo-500 text-sm">
@@ -37,9 +51,9 @@
 <div>
     <label class="block text-sm font-medium text-slate-700 mb-1">Image</label>
     @if (!empty($product?->image))
-        <img src="{{ asset('storage/'.$product->image) }}" class="h-24 rounded-lg mb-2">
+        <img src="{{ $product->image_url }}" class="h-24 rounded-lg mb-2">
     @endif
-    <input type="file" name="image" accept="image/*" class="text-sm">
+    <input type="file" name="image" class="text-sm">
     @error('image') <p class="text-xs text-rose-500 mt-1">{{ $message }}</p> @enderror
 </div>
 <div class="flex flex-wrap gap-6 pt-2">
