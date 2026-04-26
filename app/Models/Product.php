@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
+use Throwable;
 
 class Product extends Model
 {
@@ -62,15 +63,22 @@ class Product extends Model
         }
 
         $disk = $this->imageDisk();
+        /** @var \Illuminate\Filesystem\FilesystemAdapter $filesystem */
+        $filesystem = Storage::disk($disk);
+
+        try {
+            if (!$filesystem->exists($this->image)) {
+                return null;
+            }
+        } catch (Throwable) {
+            return null;
+        }
 
         if ((string) config("filesystems.disks.{$disk}.driver") === 'local') {
             return $disk === 'public'
                 ? asset('storage/'.$this->image)
                 : route('media.show', ['path' => $this->image]);
         }
-
-        /** @var \Illuminate\Filesystem\FilesystemAdapter $filesystem */
-        $filesystem = Storage::disk($disk);
 
         return $filesystem->url($this->image);
     }
