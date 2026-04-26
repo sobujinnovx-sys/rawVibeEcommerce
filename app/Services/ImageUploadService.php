@@ -40,16 +40,22 @@ class ImageUploadService
         }
 
         $disk = config('filesystems.default');
-        $filesystem = Storage::disk($disk);
+        $driver = (string) config("filesystems.disks.{$disk}.driver");
 
         try {
-            if ((string) config("filesystems.disks.{$disk}.driver") === 'cloudinary') {
-                // Cloudinary returns URL directly
-                return $filesystem->url($path);
+            // For Cloudinary, generate the proper URL
+            if ($driver === 'cloudinary') {
+                return self::getCloudinaryUrl($path);
             }
 
+            $filesystem = Storage::disk($disk);
+
             // For local disks
-            if ((string) config("filesystems.disks.{$disk}.driver") === 'local') {
+            if ($driver === 'local') {
+                if (!$filesystem->exists($path)) {
+                    return null;
+                }
+
                 if ($disk === 'public') {
                     return asset('storage/' . $path);
                 }
@@ -58,6 +64,33 @@ class ImageUploadService
 
             // For S3 and other cloud storage
             return $filesystem->url($path);
+        } catch (\Throwable) {
+            return null;
+        }
+    }
+
+    /**
+     * Generate a proper Cloudinary URL
+     *
+     * @param string $path The file path
+     * @return string|null The Cloudinary URL
+     */
+    private static function getCloudinaryUrl(string $path): ?string
+    {
+        try {
+            $cloudinaryUrl = env('CLOUDINARY_URL');
+            
+            if (!$cloudinaryUrl) {
+                return null;
+            }
+
+            // Parse: cloudinary://api_key:api_secret@cloud_name
+            if (preg_match('/cloudinary:\/\/(.+):(.+)@(.+)/', $cloudinaryUrl, $matches)) {
+                $cloudName = $matches[3];
+                return "https://res.cloudinary.com/{$cloudName}/image/upload/{$path}";
+            }
+
+            return null;
         } catch (\Throwable) {
             return null;
         }
