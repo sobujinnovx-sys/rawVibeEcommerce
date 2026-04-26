@@ -37,10 +37,10 @@
                         </template>
                     </div>
                 </div>
-                <div class="relative hidden md:block">
-                    <div class="aspect-[4/3] rounded-3xl bg-white/10 backdrop-blur p-6 overflow-hidden">
+                <div class="relative order-first md:order-none">
+                    <div class="aspect-[16/10] md:aspect-[4/3] rounded-3xl bg-white/10 backdrop-blur p-4 md:p-6 overflow-hidden">
                         <template x-for="(slide, idx) in slides" :key="idx">
-                            <div x-show="active === idx" x-transition.opacity.duration.500ms class="absolute inset-6 rounded-2xl border border-white/30 bg-white/10 overflow-hidden">
+                            <div x-show="active === idx" x-transition.opacity.duration.500ms class="absolute inset-4 md:inset-6 rounded-2xl border border-white/30 bg-white/10 overflow-hidden">
                                 <template x-if="slide.image_url">
                                     <img :src="slide.image_url" :alt="slide.title" class="h-full w-full object-cover">
                                 </template>
@@ -75,9 +75,9 @@
                         </a>
                     </div>
                 </div>
-                <div class="relative hidden md:block">
-                    <div class="aspect-[4/3] rounded-3xl bg-white/10 backdrop-blur p-6 overflow-hidden">
-                        <div class="absolute inset-6 rounded-2xl border border-white/30 bg-gradient-to-br from-white/35 via-white/10 to-transparent p-6">
+                <div class="relative order-first md:order-none">
+                    <div class="aspect-[16/10] md:aspect-[4/3] rounded-3xl bg-white/10 backdrop-blur p-4 md:p-6 overflow-hidden">
+                        <div class="absolute inset-4 md:inset-6 rounded-2xl border border-white/30 bg-gradient-to-br from-white/35 via-white/10 to-transparent p-4 md:p-6">
                             <p class="text-xs uppercase tracking-[0.2em] text-white/75">{{ __('Promo') }}</p>
                             <h3 class="mt-3 text-3xl font-bold">{{ __('Flash Deal') }}</h3>
                             <p class="mt-3 text-white/80">{{ __('Experience a smoother checkout with trusted payment and fast delivery.') }}</p>
