@@ -159,6 +159,7 @@ return [
         /*
          * Package Service Providers...
          */
+        CloudinaryLabs\CloudinaryLaravel\CloudinaryServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -182,6 +183,7 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
+        'Cloudinary' => CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary::class,
         // 'Example' => App\Facades\Example::class,
     ])->toArray(),
 
