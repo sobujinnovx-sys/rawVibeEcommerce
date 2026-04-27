@@ -14,6 +14,7 @@
                     <th class="text-left px-5 py-3">Payment</th>
                     <th class="text-left px-5 py-3">Status</th>
                     <th class="text-left px-5 py-3">Date</th>
+                    <th class="text-right px-5 py-3">Actions</th>
                 </tr>
             </thead>
             <tbody class="divide-y">
@@ -29,9 +30,16 @@
                             <span class="px-2 py-1 rounded-full text-xs bg-slate-100 text-slate-700">{{ ucfirst($order->status) }}</span>
                         </td>
                         <td class="px-5 py-3 text-slate-500">{{ $order->created_at->format('M d, Y') }}</td>
+                        <td class="px-5 py-3 text-right">
+                            <form method="POST" action="{{ route('admin.orders.destroy', $order) }}" class="inline" onsubmit="return confirm('Delete this order? This cannot be undone.');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="text-rose-600 hover:text-rose-500 text-sm font-medium">Delete</button>
+                            </form>
+                        </td>
                     </tr>
                 @empty
-                    <tr><td colspan="6" class="p-6 text-center text-slate-500">No orders yet.</td></tr>
+                    <tr><td colspan="7" class="p-6 text-center text-slate-500">No orders yet.</td></tr>
                 @endforelse
             </tbody>
         </table>

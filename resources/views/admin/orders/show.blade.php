@@ -70,6 +70,15 @@
                     <button class="w-full bg-indigo-600 text-white py-2 rounded-full font-semibold text-sm hover:bg-indigo-500">Update Status</button>
                 </form>
             </div>
+            <div class="bg-white border border-rose-200 rounded-2xl p-6">
+                <h3 class="font-semibold text-rose-700 mb-2">Danger Zone</h3>
+                <p class="text-xs text-slate-500 mb-3">Deleting this order will permanently remove it and all its items.</p>
+                <form method="POST" action="{{ route('admin.orders.destroy', $order) }}" onsubmit="return confirm('Delete this order? This cannot be undone.');">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="w-full bg-rose-600 text-white py-2 rounded-full font-semibold text-sm hover:bg-rose-500">Delete Order</button>
+                </form>
+            </div>
         </aside>
     </div>
 @endsection
