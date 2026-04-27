@@ -20,7 +20,7 @@ fi
 
 php artisan migrate --force
 
-if [ "${APP_SEED_DEMO_DATA:-true}" = "true" ]; then
+if [ "${APP_SEED_DEMO_DATA:-false}" = "true" ]; then
   php artisan db:seed --force
 fi
 

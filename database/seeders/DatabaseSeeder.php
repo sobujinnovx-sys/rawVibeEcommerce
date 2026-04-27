@@ -36,6 +36,12 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+        // Demo catalog is seeded only once. This prevents deleted demo products
+        // from reappearing when db:seed is executed again.
+        if (Product::query()->exists()) {
+            return;
+        }
+
         $categoriesData = [
             'Electronics' => 'Gadgets, devices, and accessories for everyday life.',
             'Fashion' => 'Trendy apparel and accessories for every style.',
