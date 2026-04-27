@@ -98,8 +98,18 @@ class ProductController extends Controller
      */
     public function destroy(Product $product): RedirectResponse
     {
-        ImageUploadService::delete($product->image);
-        $product->delete();
+        if ($product->orderItems()->exists()) {
+            return redirect()->route('admin.products.index')
+                ->with('error', 'Cannot delete this product because it is referenced by existing orders.');
+        }
+
+        try {
+            ImageUploadService::delete($product->image);
+            $product->delete();
+        } catch (\Illuminate\Database\QueryException $e) {
+            return redirect()->route('admin.products.index')
+                ->with('error', 'Cannot delete this product because it is referenced by other records.');
+        }
 
         return redirect()->route('admin.products.index')->with('success', 'Product deleted successfully.');
     }

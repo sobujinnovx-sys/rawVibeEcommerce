@@ -73,7 +73,21 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category): RedirectResponse
     {
-        $category->delete();
+        $hasOrderedProducts = $category->products()
+            ->whereHas('orderItems')
+            ->exists();
+
+        if ($hasOrderedProducts) {
+            return redirect()->route('admin.categories.index')
+                ->with('error', 'Cannot delete this category because it contains products referenced by existing orders.');
+        }
+
+        try {
+            $category->delete();
+        } catch (\Illuminate\Database\QueryException $e) {
+            return redirect()->route('admin.categories.index')
+                ->with('error', 'Cannot delete this category because it is referenced by other records.');
+        }
 
         return redirect()->route('admin.categories.index')->with('success', 'Category deleted successfully.');
     }

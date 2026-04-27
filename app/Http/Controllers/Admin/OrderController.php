@@ -35,4 +35,16 @@ class OrderController extends Controller
 
         return back()->with('success', 'Order status updated successfully.');
     }
+
+    public function destroy(Order $order): RedirectResponse
+    {
+        try {
+            $order->delete();
+        } catch (\Illuminate\Database\QueryException $e) {
+            return redirect()->route('admin.orders.index')
+                ->with('error', 'Cannot delete this order because it is referenced by other records.');
+        }
+
+        return redirect()->route('admin.orders.index')->with('success', 'Order deleted successfully.');
+    }
 }
