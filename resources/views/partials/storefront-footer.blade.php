@@ -39,7 +39,7 @@
     <div class="border-t border-slate-800">
         <div class="max-w-7xl mx-auto px-4 py-5 text-xs text-slate-500 flex flex-col sm:flex-row justify-between gap-2">
             <span>&copy; {{ date('Y') }} RAW VIBE ツ. {{ __('All rights reserved.') }}</span>
-            <span>{{ __('Developed by') }} <span class="text-slate-300 font-medium">Amith Hassan Anik</span> · Laravel + Blade + Tailwind</span>
+            <span>{{ __('Developed by') }} <span class="text-slate-300 font-medium">Amith Hassan Anik</span> · Laravel + Blade </span>
         </div>
     </div>
 </footer>

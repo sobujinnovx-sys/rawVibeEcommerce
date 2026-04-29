@@ -55,6 +55,11 @@ class Product extends Model
         return $this->hasMany(ProductReview::class);
     }
 
+    public function images(): HasMany
+    {
+        return $this->hasMany(ProductImage::class)->orderBy('sort_order', 'asc');
+    }
+
     public function getImageUrlAttribute(): ?string
     {
         return ImageUploadService::getUrl($this->image);
